@@ -1,0 +1,530 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Acesso aos Materiais — DELT∆</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet"/>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --green: #00b37e;
+      --green-dark: #007a55;
+      --bg: #050f0a;
+      --surface: #0c1f16;
+      --border: rgba(0, 179, 126, 0.2);
+      --text: #e8f5f0;
+      --muted: #7aa898;
+      --error: #ff6b6b;
+    }
+
+    body {
+      background-color: var(--bg);
+      color: var(--text);
+      font-family: 'DM Sans', sans-serif;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(0,179,126,0.04) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0,179,126,0.04) 1px, transparent 1px);
+      background-size: 40px 40px;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    body::after {
+      content: '';
+      position: fixed;
+      top: -20%;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 700px;
+      height: 700px;
+      background: radial-gradient(circle, rgba(0,179,126,0.12) 0%, transparent 70%);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .container {
+      position: relative;
+      z-index: 1;
+      max-width: 560px;
+      margin: 0 auto;
+      padding: 60px 24px 80px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(0,179,126,0.12);
+      border: 1px solid var(--border);
+      border-radius: 100px;
+      padding: 6px 16px;
+      font-size: 12px;
+      font-weight: 500;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--green);
+      margin-bottom: 32px;
+      animation: fadeDown 0.6s ease both;
+    }
+
+    .badge::before {
+      content: '';
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: var(--green);
+      box-shadow: 0 0 8px var(--green);
+      animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.4; }
+    }
+
+    .logo-text {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(1.8rem, 6vw, 2.8rem);
+      font-weight: 900;
+      line-height: 1.1;
+      text-align: center;
+      letter-spacing: -0.02em;
+      color: var(--text);
+      animation: fadeDown 0.7s ease 0.1s both;
+      margin-bottom: 8px;
+    }
+
+    .logo-text span { color: var(--green); }
+
+    .subtitle {
+      font-size: 14px;
+      font-weight: 300;
+      color: var(--muted);
+      text-align: center;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      animation: fadeDown 0.7s ease 0.2s both;
+      margin-bottom: 48px;
+    }
+
+    .divider {
+      width: 100%;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, var(--border), transparent);
+      margin-bottom: 40px;
+      animation: fadeIn 1s ease 0.3s both;
+    }
+
+    .card {
+      width: 100%;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 36px 32px;
+      animation: fadeUp 0.7s ease 0.35s both;
+    }
+
+    .card-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 18px;
+      font-weight: 700;
+      color: var(--green);
+      margin-bottom: 8px;
+    }
+
+    .card-desc {
+      font-size: 14px;
+      color: var(--muted);
+      margin-bottom: 28px;
+      line-height: 1.6;
+    }
+
+    .input-wrap {
+      position: relative;
+      margin-bottom: 16px;
+    }
+
+    .input-wrap svg {
+      position: absolute;
+      left: 14px;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 18px;
+      height: 18px;
+      color: var(--muted);
+      pointer-events: none;
+    }
+
+    input[type="email"],
+    input[type="password"],
+    input[type="text"] {
+      width: 100%;
+      background: rgba(0,179,126,0.06);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 14px 14px 14px 42px;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 14px;
+      color: var(--text);
+      outline: none;
+      transition: border-color 0.2s;
+    }
+
+    input::placeholder { color: var(--muted); }
+    input:focus {
+      border-color: var(--green);
+      background: rgba(0,179,126,0.1);
+    }
+
+    .btn {
+      width: 100%;
+      background: linear-gradient(135deg, #00b37e, #007a55);
+      color: #fff;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 15px;
+      font-weight: 600;
+      padding: 15px 24px;
+      border-radius: 12px;
+      border: none;
+      cursor: pointer;
+      box-shadow: 0 8px 24px rgba(0,179,126,0.3);
+      transition: transform 0.2s, box-shadow 0.2s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      margin-top: 4px;
+    }
+
+    .btn:hover:not(:disabled) {
+      transform: translateY(-2px);
+      box-shadow: 0 12px 32px rgba(0,179,126,0.45);
+    }
+
+    .btn:disabled { opacity: 0.7; cursor: not-allowed; }
+
+    .msg {
+      margin-top: 20px;
+      padding: 14px 16px;
+      border-radius: 12px;
+      font-size: 14px;
+      display: none;
+      align-items: flex-start;
+      gap: 10px;
+    }
+
+    .msg.success {
+      background: rgba(0,179,126,0.12);
+      border: 1px solid rgba(0,179,126,0.3);
+      color: #00d68f;
+      display: flex;
+    }
+
+    .msg.error {
+      background: rgba(255,107,107,0.1);
+      border: 1px solid rgba(255,107,107,0.3);
+      color: var(--error);
+      display: flex;
+    }
+
+    .msg svg { width: 18px; height: 18px; flex-shrink: 0; margin-top: 1px; }
+
+    .spinner {
+      width: 18px;
+      height: 18px;
+      border: 2px solid rgba(255,255,255,0.3);
+      border-top-color: #fff;
+      border-radius: 50%;
+      animation: spin 0.7s linear infinite;
+    }
+
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* Secções */
+    #secaoLogin { display: flex; flex-direction: column; width: 100%; }
+    #secaoAcesso { display: none; flex-direction: column; width: 100%; }
+
+    .logout-btn {
+      background: none;
+      border: 1px solid var(--border);
+      color: var(--muted);
+      font-family: 'DM Sans', sans-serif;
+      font-size: 12px;
+      padding: 6px 14px;
+      border-radius: 8px;
+      cursor: pointer;
+      margin-bottom: 20px;
+      align-self: flex-end;
+      transition: color 0.2s, border-color 0.2s;
+    }
+
+    .logout-btn:hover { color: var(--error); border-color: var(--error); }
+
+    .footer {
+      margin-top: 48px;
+      font-size: 12px;
+      color: rgba(122,168,152,0.5);
+      text-align: center;
+      animation: fadeIn 1s ease 0.6s both;
+      letter-spacing: 0.04em;
+    }
+
+    @keyframes fadeDown {
+      from { opacity: 0; transform: translateY(-20px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to   { opacity: 1; }
+    }
+
+    @media (max-width: 480px) {
+      .card { padding: 28px 20px; }
+      .container { padding: 48px 18px 64px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+
+    <div class="badge">Acesso aos Materiais</div>
+    <h1 class="logo-text">Preparatório Virtual<br>com <span>DELT∆</span></h1>
+    <p class="subtitle">Medicina &amp; Ciências da Saúde</p>
+    <div class="divider"></div>
+
+    <!-- ── LOGIN ── -->
+    <div class="card" id="cardLogin">
+      <div class="card-title">Área Reservada</div>
+      <div class="card-desc">Insere as tuas credenciais para aceder à partilha de materiais.</div>
+
+      <div id="secaoLogin">
+        <div class="input-wrap">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
+            <polyline points="22,6 12,12 2,6"/>
+          </svg>
+          <input type="email" id="loginEmail" placeholder="Email" />
+        </div>
+
+        <div class="input-wrap">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
+            <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+          </svg>
+          <input type="password" id="loginSenha" placeholder="Senha" />
+        </div>
+
+        <button class="btn" id="btnLogin" onclick="fazerLogin()">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:18px;height:18px">
+            <path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/>
+            <polyline points="10 17 15 12 10 7"/>
+            <line x1="15" y1="12" x2="3" y2="12"/>
+          </svg>
+          Entrar
+        </button>
+
+        <div class="msg" id="msgLoginError">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="10"/>
+            <line x1="12" y1="8" x2="12" y2="12"/>
+            <line x1="12" y1="16" x2="12.01" y2="16"/>
+          </svg>
+          <span id="msgLoginErrorText">Email ou senha incorretos.</span>
+        </div>
+      </div>
+
+      <!-- ── APÓS LOGIN ── -->
+      <div id="secaoAcesso">
+        <button class="logout-btn" onclick="fazerLogout()">Sair</button>
+
+        <div class="card-title">Partilhar acesso às pastas</div>
+        <div class="card-desc" style="margin-bottom:24px">Insere o Gmail do candidato para partilhar as 4 pastas de materiais automaticamente.</div>
+
+        <div class="input-wrap">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
+            <polyline points="22,6 12,12 2,6"/>
+          </svg>
+          <input type="email" id="emailInput" placeholder="Gmail do candidato (ex: nome@gmail.com)" />
+        </div>
+
+        <button class="btn" id="btnEnviar" onclick="partilhar()">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:18px;height:18px">
+            <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12 19.79 19.79 0 0 1 1.61 3.44 2 2 0 0 1 3.6 1.27h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.91 8.96a16 16 0 0 0 6 6l.96-.96a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/>
+          </svg>
+          Partilhar Acesso
+        </button>
+
+        <div class="msg" id="msgSuccess">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
+            <polyline points="22 4 12 14.01 9 11.01"/>
+          </svg>
+          <span>Acesso partilhado com sucesso! O candidato receberá uma notificação do Google.</span>
+        </div>
+
+        <div class="msg" id="msgError">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="10"/>
+            <line x1="12" y1="8" x2="12" y2="12"/>
+            <line x1="12" y1="16" x2="12.01" y2="16"/>
+          </svg>
+          <span id="msgErrorText">Ocorreu um erro. Verifica o email e tenta novamente.</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="footer">© 2025 Preparatório Virtual com DELT∆ · Todos os direitos reservados</div>
+  </div>
+
+  <!-- Firebase -->
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+    import { getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyCA-40CMN5E-ZmeNHXzy9PArmFd_JjJYFI",
+      authDomain: "preparatorio-virtual-com-delta.firebaseapp.com",
+      projectId: "preparatorio-virtual-com-delta",
+      storageBucket: "preparatorio-virtual-com-delta.firebasestorage.app",
+      messagingSenderId: "407480747292",
+      appId: "1:407480747292:web:12994b46ef57d44ae766d9",
+      measurementId: "G-Q7CJKNXSZ4"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+
+    const EMAIL_PERMITIDO = "preparatoriovirtualcomdelta1@gmail.com";
+
+    const SCRIPT_URL_1 = "https://script.google.com/macros/s/AKfycbyI83oxpcvUICSKuPQp4VHBnar4fyJj0-LsyLEYUb2_FiLWnXw0JghG7qqvfOga0BalRQ/exec";
+    const SCRIPT_URL_2 = "https://script.google.com/macros/s/AKfycbyEJgXNLoNgvZHuRQ9fnGR3F6gEGrt1aQV32TSoOABNDJ0RqDLEseznxZ6kfUH-KzOPng/exec";
+
+    // Verifica estado de autenticação
+    onAuthStateChanged(auth, (user) => {
+      if (user && user.email === EMAIL_PERMITIDO) {
+        mostrarAcesso();
+      } else {
+        mostrarLogin();
+      }
+    });
+
+    function mostrarLogin() {
+      document.getElementById('secaoLogin').style.display = 'flex';
+      document.getElementById('secaoAcesso').style.display = 'none';
+    }
+
+    function mostrarAcesso() {
+      document.getElementById('secaoLogin').style.display = 'none';
+      document.getElementById('secaoAcesso').style.display = 'flex';
+    }
+
+    window.fazerLogin = async function() {
+      const email = document.getElementById('loginEmail').value.trim();
+      const senha = document.getElementById('loginSenha').value;
+      const btn = document.getElementById('btnLogin');
+      const msgError = document.getElementById('msgLoginError');
+
+      msgError.style.display = 'none';
+
+      if (!email || !senha) {
+        msgError.style.display = 'flex';
+        document.getElementById('msgLoginErrorText').textContent = 'Preenche todos os campos.';
+        return;
+      }
+
+      if (email !== EMAIL_PERMITIDO) {
+        msgError.style.display = 'flex';
+        document.getElementById('msgLoginErrorText').textContent = 'Acesso não autorizado.';
+        return;
+      }
+
+      btn.disabled = true;
+      btn.innerHTML = '<div class="spinner"></div> A entrar...';
+
+      try {
+        await signInWithEmailAndPassword(auth, email, senha);
+      } catch (err) {
+        msgError.style.display = 'flex';
+        document.getElementById('msgLoginErrorText').textContent = 'Email ou senha incorretos.';
+        btn.disabled = false;
+        btn.innerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:18px;height:18px"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><polyline points="10 17 15 12 10 7"/><line x1="15" y1="12" x2="3" y2="12"/></svg> Entrar`;
+      }
+    };
+
+    window.fazerLogout = async function() {
+      await signOut(auth);
+    };
+
+    window.partilhar = async function() {
+      const email = document.getElementById('emailInput').value.trim();
+      const btn = document.getElementById('btnEnviar');
+      const msgSuccess = document.getElementById('msgSuccess');
+      const msgError = document.getElementById('msgError');
+
+      msgSuccess.style.display = 'none';
+      msgError.style.display = 'none';
+
+      if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+        msgError.style.display = 'flex';
+        document.getElementById('msgErrorText').textContent = 'Por favor insere um email válido.';
+        return;
+      }
+
+      btn.disabled = true;
+      btn.innerHTML = '<div class="spinner"></div> A partilhar...';
+
+      try {
+        await Promise.all([
+          fetch(SCRIPT_URL_1, {
+            method: 'POST',
+            mode: 'no-cors',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ email })
+          }),
+          fetch(SCRIPT_URL_2, {
+            method: 'POST',
+            mode: 'no-cors',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ email })
+          })
+        ]);
+
+        msgSuccess.style.display = 'flex';
+        document.getElementById('emailInput').value = '';
+      } catch (err) {
+        msgError.style.display = 'flex';
+        document.getElementById('msgErrorText').textContent = 'Erro de ligação. Tenta novamente.';
+      }
+
+      btn.disabled = false;
+      btn.innerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:18px;height:18px"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12 19.79 19.79 0 0 1 1.61 3.44 2 2 0 0 1 3.6 1.27h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.91 8.96a16 16 0 0 0 6 6l.96-.96a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg> Partilhar Acesso`;
+    };
+
+    document.getElementById('loginSenha').addEventListener('keypress', function(e) {
+      if (e.key === 'Enter') window.fazerLogin();
+    });
+
+    document.getElementById('emailInput').addEventListener('keypress', function(e) {
+      if (e.key === 'Enter') window.partilhar();
+    });
+  </script>
+</body>
+</html>
